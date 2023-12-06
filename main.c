@@ -6,7 +6,7 @@
 /*   By: grinella <grinella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 10:57:44 by grinella          #+#    #+#             */
-/*   Updated: 2023/12/06 15:22:55 by grinella         ###   ########.fr       */
+/*   Updated: 2023/12/06 16:03:05 by grinella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	**find_path(char **env)
 	int		p;
 	char	**path;
 	char	*res;
-	
+
 	path = 0;
 	res = 0;
 	i = 0;
@@ -32,7 +32,7 @@ char	**find_path(char **env)
 	}
 	while (*res != '/')
 		*res++;
-	path = ft_split(res	, ':');
+	path = ft_split(res, ':');
 	// printf("\necco la path: %s\n", res);
 	// while (path[p] != NULL)
 	// {
