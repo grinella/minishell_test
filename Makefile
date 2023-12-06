@@ -6,7 +6,7 @@
 #    By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 05:55:29 by duzegbu           #+#    #+#              #
-#    Updated: 2023/12/06 19:26:58 by ecaruso          ###   ########.fr        #
+#    Updated: 2023/12/06 19:38:43 by ecaruso          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ $(NAME):	$(LIBFT) $(OBJS)
 
 $(LIBFT):	
 			@echo "Compiling libft.a"
-			@$(MAKE) bonus -s -C $(LIBFT_DIR)
+			@$(MAKE) all -s -C $(LIBFT_DIR)
 
 .c.o:
 			@printf "\033[0;33mGenerating minishell objects... %-33.33s\r" $@
