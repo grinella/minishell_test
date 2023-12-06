@@ -24,9 +24,9 @@ RM			=	rm -f
 EXECUTOR_DIR	=	srcs/executor
 PARSING_DIR	=	srcs/parsing
 BUILTIN_DIR	=	srcs/builtins
+SIGNAL_DIR =	srcs/signals
 
 SRCS		=	minishell.c \
-				$(EXEC_DIR)/exec_errors.c \
 				$(EXECUTOR_DIR)/executor.c \
 				srcs/utils.c \
 
