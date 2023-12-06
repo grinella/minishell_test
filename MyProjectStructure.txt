@@ -1,0 +1,72 @@
+minishell/
+|-- src/
+|   |-- main.c
+|   |-- parser/
+|   |   |-- parser.c
+|   |   |-- parser_utils.c
+|   |
+|   |-- executor/
+|   |   |-- executor.c
+|   |
+|   |-- builtins/
+|   |   |-- builtins.c
+|   |
+|   |-- signals/
+|   |   |-- signals.c
+|   |
+|   |-- utils/
+|       |-- utils.c
+|
+|-- includes/
+|   |-- minishell.h
+|
+|-- libft/ (my Libft library)
+|-- Makefile
+
+
+
+Parser:
+
+Responsibility: The parser analyzes user input and breaks it down into meaningful components for further processing.
+Tasks:
+Tokenize the input: Split the user command into individual tokens.
+Handle quoting and escaping: Recognize quoted strings and escaped characters properly.
+Identify command structure: Determine the command, arguments, and any redirection or piping instructions.
+
+
+
+Executor:
+
+Responsibility: The executor is responsible for executing the parsed commands and managing the execution environment.
+Tasks:
+Execute external commands: Launch external programs specified by the user.
+Handle built-in commands: Execute commands that are built into the shell (e.g., cd, echo, exit).
+Manage process execution: Handle forks, execute commands in child processes, and handle process communication (e.g., pipes).
+Redirect input and output: Implement redirections and handle file descriptors appropriately.
+
+
+
+Builtins:
+
+Responsibility: Handle built-in commands, which are commands that are part of the shell itself rather than external programs.
+Common Builtins:
+echo: Display messages.
+cd: Change the current working directory.
+pwd: Print the current working directory.
+export: Set environment variables.
+unset: Unset environment variables.
+env: Display the environment.
+exit: Terminate the shell.
+
+
+
+Signals:
+
+Responsibility: Manage signals, which are software interrupts delivered to a process.
+Common Signals:
+SIGINT (Ctrl-C): Interrupt process (commonly used to stop a running command).
+SIGQUIT (Ctrl-): Quit process.
+SIGTSTP (Ctrl-Z): Stop/suspend process.
+Tasks:
+Handle signal interruptions: Define how the shell responds to signals like Ctrl-C or Ctrl-D.
+Implement signal handlers: Specify custom actions for different signals.
