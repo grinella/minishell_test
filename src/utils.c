@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+        */
+/*   By: grinella <grinella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 16:16:23 by ecaruso           #+#    #+#             */
-/*   Updated: 2023/12/06 16:23:35 by ecaruso          ###   ########.fr       */
+/*   Updated: 2023/12/06 17:02:33 by grinella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 int	ft_strcmp(char *s1, char *s2)
 {

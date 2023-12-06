@@ -6,11 +6,11 @@
 /*   By: grinella <grinella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 11:15:23 by grinella          #+#    #+#             */
-/*   Updated: 2023/12/06 16:13:54 by grinella         ###   ########.fr       */
+/*   Updated: 2023/12/06 17:01:37 by grinella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exe.h"
+#include "minishell.h"
 
 int	error(char *str, char *err)
 {
@@ -47,7 +47,7 @@ int	exmain(int argc, char **argv, char **env)
 	{
 		argv = &argv[i + 1];
 		i = 0;
-		while (argv[i] && strcmp(argv[i], "|"))
+		while (argv[i] && ft_strcmp(argv[i], "|"))
 			i++;
 		if (i != 0 && (argv[i] == NULL))
 		{
@@ -65,7 +65,7 @@ int	exmain(int argc, char **argv, char **env)
 				tmp = dup(0);
 			}
 		}
-		else if (i != 0 && !strcmp(argv[i], "|"))
+		else if (i != 0 && !ft_strcmp(argv[i], "|"))
 		{
 			pipe(fd);
 			pid = fork();
