@@ -10,48 +10,56 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
+NAME		=	minishell
 
-SRC_DIR = src
-PARSER_DIR = parser
-EXECUTOR_DIR = executor
-BUILTINS_DIR = builtins
-SIGNALS_DIR = signals
-UTILS_DIR = utils
+LIBFT_A		=	libft.a
+LIBFT_DIR	=	libft/
+LIBFT		=	$(addprefix $(LIBFT_DIR), $(LIBFT_A))
 
-SRCS = $(wildcard $(SRC_DIR)/*.c) \
-       $(wildcard $(SRC_DIR)/$(PARSER_DIR)/*.c) \
-       $(wildcard $(SRC_DIR)/$(EXECUTOR_DIR)/*.c) \
-       $(wildcard $(SRC_DIR)/$(BUILTINS_DIR)/*.c) \
-       $(wildcard $(SRC_DIR)/$(SIGNALS_DIR)/*.c) \
-       $(wildcard $(SRC_DIR)/$(UTILS_DIR)/*.c)
+CC			=	gcc
+INCLUDE		=	includes
+CFLAGS		=	-Wall -Wextra -Werror -I$(INCLUDE)
+RM			=	rm -f
 
-OBJS = $(SRCS:.c=.o)
+EXECUTOR_DIR	=	srcs/executor
+PARSING_DIR	=	srcs/parsing
+BUILTIN_DIR	=	srcs/builtins
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-INCLUDES = -Iincludes -Ilibft
+SRCS		=	minishell.c \
+				$(EXEC_DIR)/exec_errors.c \
+				$(EXECUTOR_DIR)/executor.c \
+				srcs/utils.c \
 
-LIBFT = libft.a
-LIBFT_PATH = libft
+OBJS		=	$(SRCS:%.c=%.o)
 
-all: $(NAME)
+all:		$(NAME)
 
-$(NAME): $(OBJS)
-	@make -C $(LIBFT_PATH)
-	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ -L$(LIBFT_PATH) -lft -lreadline
+$(NAME):	$(LIBFT) $(OBJS)
+			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft -L/Users/$(USER)/.brew/opt/readline/lib -lreadline -ltermcap
+			@echo "\nLinked into executable \033[0;32mminishell\033[0m."
 
-%.o: %.c
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(LIBFT):
+			@echo "Compiling libft.a"
+			@$(MAKE) bonus -s -C $(LIBFT_DIR)
 
-clean:
-	@make clean -C $(LIBFT_PATH)
-	@rm -f $(OBJS)
+.c.o:
+			@printf "\033[0;33mGenerating minishell objects... %-33.33s\r" $@
+			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
-fclean: clean
-	@make fclean -C $(LIBFT_PATH)
-	@rm -f $(NAME)
+localclean:
+			@$(RM) $(OBJS)
+			@echo "Removed object files."
 
-re: fclean all
+clean:		localclean
+			@$(MAKE) clean -s -C $(LIBFT_DIR)
+			@echo "Clean libft."
 
-.PHONY: all clean fclean re
+fclean:		localclean
+			@$(MAKE) fclean -s -C $(LIBFT_DIR)
+			@echo "Full clean libft."
+			@$(RM) $(NAME)
+			@echo "Removed executable."
+
+re:			fclean all
+
+.PHONY:		all clean fclean localclean re

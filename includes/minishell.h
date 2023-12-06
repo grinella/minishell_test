@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
-#include "../libft/libft.h"
+#include <stdio.h>
 
 int	exmain(int argc, char **argv, char **env);
 int	ft_strcmp(char *s1, char *s2);
