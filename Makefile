@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: duzegbu <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 05:55:29 by duzegbu           #+#    #+#              #
-#    Updated: 2023/12/06 16:55:39 by duzegbu          ###   ########.fr        #
+#    Updated: 2023/12/06 19:26:58 by ecaruso          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,14 +21,14 @@ INCLUDE		=	includes
 CFLAGS		=	-Wall -Wextra -Werror -I$(INCLUDE)
 RM			=	rm -f
 
-EXECUTOR_DIR	=	srcs/executor
-PARSING_DIR	=	srcs/parsing
-BUILTIN_DIR	=	srcs/builtins
-SIGNAL_DIR =	srcs/signals
+EXECUTOR_DIR	=	src/executor
+PARSING_DIR	=	src/parsing
+BUILTIN_DIR	=	src/builtins
+SIGNAL_DIR =	src/signals
 
 SRCS		=	minishell.c \
 				$(EXECUTOR_DIR)/executor.c \
-				srcs/utils.c \
+				src/utils.c \
 
 OBJS		=	$(SRCS:%.c=%.o)
 
@@ -38,7 +38,7 @@ $(NAME):	$(LIBFT) $(OBJS)
 			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft -L/Users/$(USER)/.brew/opt/readline/lib -lreadline -ltermcap
 			@echo "\nLinked into executable \033[0;32mminishell\033[0m."
 
-$(LIBFT):
+$(LIBFT):	
 			@echo "Compiling libft.a"
 			@$(MAKE) bonus -s -C $(LIBFT_DIR)
 
