@@ -118,11 +118,11 @@ int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n)
 			g_status = my_exit(cmd, is_exit);
 		else if (!cmd->next && a && !ft_strncmp(*a, "cd", n) && n == 2)
 			g_status = my_cd(prompt);
-		//else if (!cmd->next && a && !ft_strncmp(*a, "export", n) && n == 6)
-			//g_status = my_export(prompt);
-		//else if (!cmd->next && a && !ft_strncmp(*a, "unset", n) && n == 5)
-		//	g_status = my_unset(prompt);
-		//else
+		else if (!cmd->next && a && !ft_strncmp(*a, "export", n) && n == 6)
+			g_status = my_export(prompt);
+		else if (!cmd->next && a && !ft_strncmp(*a, "unset", n) && n == 5)
+			g_status = my_unset(prompt);
+		else
 		{
 			signal(SIGINT, SIG_IGN);
 			signal(SIGQUIT, SIG_IGN);

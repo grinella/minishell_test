@@ -16,5 +16,20 @@
 #include <stdio.h>
 #include "../libft/libft.h"
 
+typedef struct s_build
+{
+	char	**full_cmd;
+	char	*full_path;
+	int		infile;
+	int		outfile;
+}			t_build;
+
+typedef struct s_prompt
+{
+	t_list	*cmds;
+	char	**envp;
+	pid_t	pid;
+}			t_prompt;
+
 int	exmain(int argc, char **argv, char **env);
 int	ft_strcmp(char *s1, char *s2);
