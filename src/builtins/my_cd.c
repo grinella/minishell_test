@@ -1,4 +1,4 @@
-# include "../include/minishell.h"
+# include "../../include/minishell.h"
 
 int	my_cd(t_prompt *p)
 {

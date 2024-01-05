@@ -10,26 +10,55 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include <string.h>
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
 #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "../libft/libft.h"
 
-typedef struct s_build
+typedef struct s_redirect
 {
-	char	**full_cmd;
-	char	*full_path;
-	int		infile;
-	int		outfile;
-}			t_build;
+    char *infile;          // <
+    char *outfile;         // >, >>
+    int redirect_type;     // 1 >, 2 >>, 3 <
+} t_redirect;
 
-typedef struct s_prompt
+typedef struct s_cmds
 {
-	t_list	*cmds;
-	char	**envp;
-	pid_t	pid;
-}			t_prompt;
+    char *cmd;              // init to NULL
+    char **args;            // init to NULL
+    t_redirect *redirect;
+    int fdi;
+    int fdo;
+    struct s_cmds *next;
+} t_cmds;
 
-int	exmain(int argc, char **argv, char **env);
-int	ft_strcmp(char *s1, char *s2);
+typedef struct s_mini
+{
+    t_cmds *cmds;
+    int cmds_count;
+    int fdin;                // init to NULL
+    int fdout;               // init to NULL
+    char **env;              // (full_path)
+    char **toks;             // (full_cmds)
+} t_mini;
+
+//SEGNALI
+void handle_signal(int signal);
+
+//PARSER
+void parse_input(t_mini *mini, char *input);
+
+//EXECUTOR
+void execute_commands(t_mini *mini);
+
+#endif

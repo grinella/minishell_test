@@ -1,4 +1,4 @@
-# include "../include/minishell.h"
+# include "../../include/minishell.h"
 
 void	*cont_error(int err_type, char *param, int err)
 {
