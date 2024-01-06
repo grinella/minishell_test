@@ -10,49 +10,59 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME 	= minishell
+NAME		=	minishell
 
-SIGNALS_DIR = src/signals
-EXEC_DIR = src/executor
-PARSER_DIR = src/parser
+LIBFT_A		=	libft.a
+LIBFT_DIR	=	libft/
+LIBFT		=	$(addprefix $(LIBFT_DIR), $(LIBFT_A))
 
+CC			=	gcc
+INCLUDE		=	includes
+CFLAGS		=	-Wall -Wextra -Werror -I$(INCLUDE)
+RM			=	rm -f
 
-SRCS 	= 	minishell.c \
-			$(wildcard $(SIGNALS_DIR)/*.c) \
-			$(wildcard $(EXEC_DIR)/*.c) \
-			$(wildcard $(PARSER_DIR)/*.c) \
+EXECUTOR_DIR	=	src/executor
+PARSING_DIR	=	src/parser
+BUILTIN_DIR	=	src/builtins
+SIGNAL_DIR =	src/signals
 
-#libft
+SRCS = 		minishell.c \
+			test.c \
+       		$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
+       		$(wildcard $(SRC_DIR)/$(EXECUTOR_DIR)/*.c) \
+       		$(wildcard $(SRC_DIR)/$(BUILTIN_DIR)/*.c) \
+       		$(wildcard $(SRC_DIR)/$(SIGNAL_DIR)/*.c) \
 
-LIBFT_PATH 	= ./libft
+OBJS		=	$(SRCS:%.c=%.o)
 
-LIBFT 	= $(LIBFT_PATH)
+all:		$(NAME)
 
+$(NAME):	$(LIBFT) $(OBJS)
+			@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft -L/Users/$(USER)/.brew/opt/readline/lib -lreadline -ltermcap
+			@echo "\nLinked into executable \033[0;32mminishell\033[0m."
 
-CC 		= gcc
+$(LIBFT):	
+			@echo "Compiling libft.a"
+			@$(MAKE) all -s -C $(LIBFT_DIR)
 
-CFLAGS 	= -Wall -Wextra -Werror -lreadline
+.c.o:
+			@printf "\033[0;33mGenerating minishell objects... %-33.33s\r" $@
+			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
-OBJS 	= $(SRCS:.c=.o)
+localclean:
+			@$(RM) $(OBJS)
+			@echo "Removed object files."
 
-%.o: %.c
-			$(CC) -c $< -o $@
+clean:		localclean
+			@$(MAKE) clean -s -C $(LIBFT_DIR)
+			@echo "Clean libft."
 
-all: $(NAME)
+fclean:		localclean
+			@$(MAKE) fclean -s -C $(LIBFT_DIR)
+			@echo "Full clean libft."
+			@$(RM) $(NAME)
+			@echo "Removed executable."
 
-$(NAME): $(OBJS)
-		@echo "$(COLOUR_YELLOW)COMPILING...$(COLOUR_END)"
-		make -C $(LIBFT_PATH)
-		$(CC) $(OBJS) $(LIBFT)/libft.a -o $(NAME) $(CFLAGS)
-		@echo "$(COLOUR_GREEN)READY TO GO!$(COLOUR_END)"
+re:			fclean all
 
-clean:
-		rm -f $(OBJS)
-		make fclean -C ${LIBFT_PATH}
-
-fclean: clean
-	rm -f $(NAME)
-
-re: fclean all
-
-.PHONY: all clean fclean re
+.PHONY:		all clean fclean localclean re
