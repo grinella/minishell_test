@@ -6,30 +6,68 @@
 /*   By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 11:16:01 by grinella          #+#    #+#             */
-/*   Updated: 2023/12/06 17:59:11 by ecaruso          ###   ########.fr       */
+/*   Updated: 2024/01/07 19:16:23 by ecaruso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include <string.h>
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
 #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "../libft/libft.h"
 
-typedef struct s_build
+typedef struct s_redirect
 {
-	char	**full_cmd;
-	char	*full_path;
-	int		infile;
-	int		outfile;
-}			t_build;
+    char *infile;          // <
+    char *outfile;         // >, >>
+    int redirect_type;     // 1 >, 2 >>, 3 <
+} t_redirect;
 
-typedef struct s_prompt
+typedef struct s_cmds
 {
-	t_list	*cmds;
-	char	**envp;
-	pid_t	pid;
-}			t_prompt;
+    char *cmd;              // init to NULL
+    char **args;            // init to NULL
+    t_redirect *redirect;
+    int fdi;
+    int fdo;
+    struct s_cmds *next;
+} t_cmds;
 
-int	exmain(int argc, char **argv, char **env);
-int	ft_strcmp(char *s1, char *s2);
+typedef struct s_mini
+{
+    t_cmds *cmds;
+    int cmds_count;
+    int fdin;                // init to NULL
+    int fdout;               // init to NULL
+    char **env;              // (full_path)
+    char **toks;             // (full_cmds)
+} t_mini;
+
+//BUILTINS
+//int	my_cd(t_prompt *p);
+int my_exit(t_list *ncd, int *n);
+
+//SEGNALI
+int open_next_file(const char *filename);
+void handle_signal(int signal);
+void handle_single_quote(char *token, t_mini *mini);
+void handle_double_quote(char *token, t_mini *mini);
+void handle_redirection(char *token, t_mini *mini);
+
+//PARSER
+void parse_input(t_mini *mini, char *input);
+
+//EXECUTOR
+void execute_commands(t_mini *mini);
+
+#endif

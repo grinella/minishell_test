@@ -1,4 +1,4 @@
-# include "../include/minishell.h"
+# include "../../includes/minishell.h"
 
 char *get_env(char *var, char **envp, int n) {
     int i = 0;

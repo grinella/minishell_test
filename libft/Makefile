@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: grinella <grinella@student.42.fr>          +#+  +:+       +#+         #
+#    By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/25 11:30:51 by grinella          #+#    #+#              #
-#    Updated: 2023/02/02 19:20:56 by grinella         ###   ########.fr        #
+#    Updated: 2024/01/07 20:07:30 by ecaruso          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,18 +66,18 @@ all: $(NAME)
 bonus: $(OBJB)
 	ar rc $(NAME) $(OBJB)
 	ranlib $(NAME)
-	
+
 $(NAME): $(OBJ)
-	ar rc $(NAME) $(OBJ)
-	ranlib $(NAME)
+	@ ar rc $(NAME) $(OBJ)
+	@ ranlib $(NAME)
 
 %.o: %.c
-	gcc $(FLAGS) -c $< -o $@
+	@ gcc $(FLAGS) -c $< -o $@
 clean:
-	rm -f $(OBJ) $(OBJB)
+	@ rm -f $(OBJ) $(OBJB)
 
 fclean: clean
-	rm -f $(NAME)
+	@ rm -f $(NAME)
 
 re: fclean all
 
