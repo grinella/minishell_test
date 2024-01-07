@@ -50,11 +50,11 @@ void execute_commands(t_mini *mini) {
         int status;
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
-            printf("Child process exited with status %d\n", WEXITSTATUS(status));
+            printf("PORCODIO %d\n", WEXITSTATUS(status));
         } else if (WIFSIGNALED(status)) {
-            printf("Child process terminated by signal %d\n", WTERMSIG(status));
+            printf("PORCODIO %d\n", WTERMSIG(status));
         } else {
-            printf("Child process did not exit normally\n");
+            printf("PORCODIO\n");
         }
     }
 }

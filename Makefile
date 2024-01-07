@@ -27,7 +27,6 @@ BUILTIN_DIR	=	src/builtins
 SIGNAL_DIR =	src/signals
 
 SRCS = 		minishell.c \
-			test.c \
        		$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(EXECUTOR_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(BUILTIN_DIR)/*.c) \

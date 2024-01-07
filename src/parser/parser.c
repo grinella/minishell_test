@@ -57,7 +57,7 @@ void handle_double_quote(char *token, t_mini *mini)
     }
 }
 
-
+//redirection da cambiare perche non funziona un cazzo
 void handle_redirection(char *token, t_mini *mini)
 {
     if (strcmp(token, "<") == 0)
