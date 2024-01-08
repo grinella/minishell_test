@@ -6,7 +6,7 @@
 #    By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/01 05:55:29 by duzegbu           #+#    #+#              #
-#    Updated: 2024/01/07 20:03:35 by ecaruso          ###   ########.fr        #
+#    Updated: 2024/01/08 18:00:36 by ecaruso          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ PARSING_DIR	=	src/parser
 BUILTIN_DIR	=	src/builtins
 SIGNAL_DIR =	src/signals
 
-SRCS = 		minishell.c \
+SRCS = 		mini_utils.c \
+			minishell.c \
        		$(wildcard $(PARSING_DIR)/*.c) \
        		$(wildcard $(EXECUTOR_DIR)/*.c) \
        	#	$(wildcard $(BUILTIN_DIR)/*.c) \

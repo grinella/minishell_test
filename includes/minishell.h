@@ -6,7 +6,7 @@
 /*   By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 11:16:01 by grinella          #+#    #+#             */
-/*   Updated: 2024/01/07 19:16:23 by ecaruso          ###   ########.fr       */
+/*   Updated: 2024/01/08 21:48:10 by ecaruso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <readline/readline.h>
@@ -51,6 +52,7 @@ typedef struct s_mini
     int fdout;               // init to NULL
     char **env;              // (full_path)
     char **toks;             // (full_cmds)
+	char *str;
 } t_mini;
 
 //BUILTINS
@@ -68,6 +70,9 @@ void handle_redirection(char *token, t_mini *mini);
 void parse_input(t_mini *mini, char *input);
 
 //EXECUTOR
-void execute_commands(t_mini *mini);
+void execute_commands(t_mini *mini, char **env);
+
+//UTILS
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

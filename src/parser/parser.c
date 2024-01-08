@@ -64,7 +64,7 @@ void handle_redirection(char *token, t_mini *mini)
         mini->fdin = open_next_file(token);
     else if (strcmp(token, ">") == 0)
     {
-        mini->fdout = open_next_file(token); 
+        mini->fdout = open_next_file(token);
     }
     else if (strcmp(token, ">>") == 0)
     {
@@ -74,6 +74,7 @@ void handle_redirection(char *token, t_mini *mini)
 
 void parse_input(t_mini *mini, char *input)
 {
+
     char *token;
     char *saveptr;
     const char *delimiters = " \t\n";
@@ -93,6 +94,11 @@ void parse_input(t_mini *mini, char *input)
         {
             printf("Token: %s\n", token);
         }
+		printf("ao1\n");
+		if (token)
+		{
+			mini->str = strdup(token);
+		}
         handle_redirection(token, mini);
         token = strtok_r(NULL, delimiters, &saveptr);
     }

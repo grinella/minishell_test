@@ -6,7 +6,7 @@
 /*   By: ecaruso <ecaruso@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 10:57:44 by grinella          #+#    #+#             */
-/*   Updated: 2024/01/07 19:23:55 by ecaruso          ###   ########.fr       */
+/*   Updated: 2024/01/08 21:29:08 by ecaruso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,19 @@
 
 t_mini *initialize_mini(char **envp)
 {
-    t_mini *mini = malloc(sizeof(t_mini));
-    if (!mini)
-    {
-        exit(EXIT_FAILURE);
-    }
+	t_mini *mini = malloc(sizeof(t_mini));
 
-    mini->cmds = NULL;
-    mini->cmds_count = 0;
-    mini->fdin = 0;
-    mini->fdout = 1;
-    mini->env = envp;
-    mini->toks = NULL;
-
-    return mini;
+	if (!mini)
+	{
+		exit(EXIT_FAILURE);
+	}
+	//mini->cmds = NULL;
+	mini->cmds_count = 0;
+	mini->fdin = 0;
+	mini->fdout = 1;
+	mini->env = envp;
+	mini->toks = NULL;
+	return (mini);
 }
 /*
 void execute_commands(t_mini *mini) {
@@ -175,27 +174,23 @@ int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-    t_mini *mini = malloc(sizeof(t_mini));
-    mini->cmds = malloc(sizeof(t_cmds));
-    mini->cmds->redirect = malloc(sizeof(t_redirect));
-    mini = initialize_mini(envp);
-
-    while (1)
-    {
-        char *input = readline("shell% ");
-        if (!input)
+	t_mini *mini = malloc(sizeof(t_mini));
+	mini->cmds = malloc(sizeof(t_cmds));
+	mini->cmds->redirect = malloc(sizeof(t_redirect));
+	mini = initialize_mini(envp);
+	while (1)
+	{
+		char *input = readline("shell% ");
+		if (!input)
         {
-            printf("\n");
-            free_cmd(mini->cmds);
-            exit(0);
-        }
-
-        add_history(input);
-        parse_input(mini, input);
-        execute_commands(mini);
-        free(input);
-
-    }
-
-    return 0;
+			printf("\n");
+			free_cmd(mini->cmds);
+			exit(0);
+		}
+		add_history(input);
+		parse_input(mini, input);
+		execute_commands(mini, envp);
+		free(input);
+	}
+	return 0;
 }
