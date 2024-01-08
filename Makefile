@@ -10,24 +10,26 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	minishell
+NAME			=	minishell
 
-LIBFT_A		=	libft.a
-LIBFT_DIR	=	libft/
-LIBFT		=	$(addprefix $(LIBFT_DIR), $(LIBFT_A))
+LIBFT_A			=	libft.a
+LIBFT_DIR		=	libft/
+LIBFT			=	$(addprefix $(LIBFT_DIR), $(LIBFT_A))
 
-CC			=	gcc
-INCLUDE		=	includes
-CFLAGS		=	-Wall -Wextra -Werror -I$(INCLUDE)
-RM			=	rm -f
+CC				=	gcc
+INCLUDE			=	includes
+CFLAGS			=	-Wall -Wextra -Werror -I$(INCLUDE)
+RM				=	rm -f
 
 EXECUTOR_DIR	=	src/executor
-PARSING_DIR	=	src/parser
-BUILTIN_DIR	=	src/builtins
-SIGNAL_DIR =	src/signals
+PARSING_DIR		=	src/parser
+BUILTIN_DIR		=	src/builtins
+SIGNAL_DIR 		=	src/signals
 
 SRCS = 		minishell.c \
-       		$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
+			src/parser/parser.c \
+			src/executor/executor.c \
+       		#$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(EXECUTOR_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(BUILTIN_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(SIGNAL_DIR)/*.c) \

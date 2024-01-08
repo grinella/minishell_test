@@ -1,7 +1,8 @@
 #include "../../includes/minishell.h"
 
-int open_next_file(const char *filename) {
-    int fd = open(filename, O_RDONLY);
+
+int open_file(const char *filename, int flags) {
+    int fd = open(filename, flags | O_CREAT, 0666);
     if (fd == -1) {
         perror("Error opening file");
         exit(EXIT_FAILURE);
@@ -9,7 +10,7 @@ int open_next_file(const char *filename) {
     return fd;
 }
 
-void handle_single_quote(char *token, t_mini *mini)
+/*void handle_single_quote(char *token, t_mini *mini)
 {
     if (!mini->cmds->args)
     {
@@ -55,10 +56,46 @@ void handle_double_quote(char *token, t_mini *mini)
         mini->cmds->args[args_count] = strdup(token);
         mini->cmds->args[args_count + 1] = NULL;
     }
+}*/
+
+void handle_redirection(char *token, t_mini *mini) {
+    if (strcmp(token, "<") == 0)
+        mini->fdin = open_file(token, O_RDONLY);
+    else if (strcmp(token, ">") == 0 || strcmp(token, ">>") == 0)
+        mini->fdout = open_file(token, O_WRONLY | O_CREAT | (strcmp(token, ">>") == 0 ? O_APPEND : O_TRUNC));
 }
 
-//redirection da cambiare perche non funziona un cazzo
-void handle_redirection(char *token, t_mini *mini)
+void handle_quote(char *token, t_mini *mini) {
+    char quote_type = token[0];
+
+    memmove(token, token + 1, strlen(token));
+    token[strlen(token) - 1] = '\0';
+
+    if (!mini->cmds->args) {
+        mini->cmds->args = malloc(2 * sizeof(char *));
+        mini->cmds->args[0] = strdup(token);
+        mini->cmds->args[1] = NULL;
+    } else {
+        int args_count = 0;
+        while (mini->cmds->args[args_count] != NULL)
+            args_count++;
+
+        mini->cmds->args = realloc(mini->cmds->args, (args_count + 2) * sizeof(char *));
+        if (!mini->cmds->args) {
+            perror("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        mini->cmds->args[args_count] = strdup(token);
+        mini->cmds->args[args_count + 1] = NULL;
+    }
+
+    if (quote_type == '\'' && strchr(token, '>') != NULL) {
+        handle_redirection(token, mini);
+    }
+}
+
+
+/*void handle_redirection(char *token, t_mini *mini)
 {
     if (strcmp(token, "<") == 0)
         mini->fdin = open_next_file(token);
@@ -70,9 +107,9 @@ void handle_redirection(char *token, t_mini *mini)
     {
         mini->fdout = open_next_file(token);
     }
-}
+}*/
 
-void parse_input(t_mini *mini, char *input)
+/*void parse_input(t_mini *mini, char *input)
 {
     char *token;
     char *saveptr;
@@ -95,5 +132,27 @@ void parse_input(t_mini *mini, char *input)
         }
         handle_redirection(token, mini);
         token = strtok_r(NULL, delimiters, &saveptr);
+    }
+}*/
+
+void parse_input(t_mini *mini, char *input) {
+    char *token;
+    char *saveptr;
+    const char *delimiters = " \t\n";
+
+    token = strtok_r(input, delimiters, &saveptr);
+    while (token != NULL) {
+        if (strchr(token, '\'') || strchr(token, '\"'))
+            handle_quote(token, mini);
+        else
+            handle_redirection(token, mini);
+
+        token = strtok_r(NULL, delimiters, &saveptr);
+    }
+
+    if (mini->cmds) {
+        execute_commands(mini);
+        free_cmd(mini->cmds);
+        mini->cmds = NULL;
     }
 }

@@ -1,6 +1,6 @@
 # include "../../include/minishell.h"
 
-void	*cont_error(int err_type, char *param, int err)
+void	*cont_error(int err_type, char *param, int err) //preso dal github
 {
 	int g_status = err;
 	if (err_type == QUOTE)
@@ -29,7 +29,7 @@ void	*cont_error(int err_type, char *param, int err)
 	return (NULL);
 }
 
-void	change_error(char **str[2])
+void	change_error(char **str[2]) //preso dal github
 {
     int g_status;
 	DIR		*dir;
@@ -54,7 +54,7 @@ void	change_error(char **str[2])
 		closedir(dir);
 }
 
-void	free_matrix(char ***m)
+void	free_matrix(char ***m) 
 {
 	int	i;
 

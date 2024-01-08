@@ -56,14 +56,12 @@ typedef struct s_mini
 //SEGNALI
 int open_next_file(const char *filename);
 void handle_signal(int signal);
-void handle_single_quote(char *token, t_mini *mini);
-void handle_double_quote(char *token, t_mini *mini);
-void handle_redirection(char *token, t_mini *mini);
 
 //PARSER
 void parse_input(t_mini *mini, char *input);
 
 //EXECUTOR
 void execute_commands(t_mini *mini);
+void free_cmd(t_cmds *cmd);
 
 #endif
