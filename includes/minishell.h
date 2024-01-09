@@ -53,6 +53,11 @@ typedef struct s_mini
     char **toks;             // (full_cmds)
 } t_mini;
 
+typedef struct s_lexer {
+    char **toks; // Token array
+    int toks_count; // Number of tokens
+} t_lexer;
+
 //SEGNALI
 int open_next_file(const char *filename);
 void handle_signal(int signal);

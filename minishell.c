@@ -55,27 +55,39 @@ void free_cmd(t_cmds *cmd) {
     free(cmd);
 }
 
-int main(int argc, char **argv, char **envp)
-{
-	(void)argc;
-	(void)argv;
+int main(int argc, char **argv, char **envp) {
+    (void)argc;
+    (void)argv;
+
     t_mini *mini = initialize_mini(envp);
 
-    while (1)
-    {
+    while (1) {
         char *input = readline("shell% ");
-        if (!input)
-        {
+        if (!input) {
             printf("\n");
-            free_cmd(mini->cmds);
             exit(0);
         }
-        
-        add_history(input);
-        parse_input(mini, input);
-        execute_commands(mini);
-        free(input);
 
+        add_history(input);
+        mini->toks = NULL;
+        t_lex lex;
+        initialize_lex(&lex);
+
+        run_lexer(input, &lex);
+        if (parse_input(mini) != -1) {
+            execute_commands(mini);
+        }
+        
+        int i = 0;
+        while (mini->toks[i] != NULL) {
+            free(mini->toks[i]);
+            i++;
+        }
+        free(mini->toks);
+
+        free(input);
     }
+
     return 0;
 }
+

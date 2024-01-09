@@ -1,158 +1,149 @@
 #include "../../includes/minishell.h"
 
-
-int open_file(const char *filename, int flags) {
-    int fd = open(filename, flags | O_CREAT, 0666);
-    if (fd == -1) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
-    }
-    return fd;
+int is_redirection(const char *str) {
+    return (strcmp(str, ">") == 0 || strcmp(str, "<") == 0);
 }
 
-/*void handle_single_quote(char *token, t_mini *mini)
-{
-    if (!mini->cmds->args)
-    {
-        mini->cmds->args = malloc(2 * sizeof(char *));
-        mini->cmds->args[0] = strdup(token);
-        mini->cmds->args[1] = NULL;
+// Function to count arguments following a redirection operator
+void count_args_after_redirection(t_mini *mini, int *index) {
+    if (mini->toks[*index] != NULL) {
+        (*index)++;
     }
-    else
-    {
-        int args_count = 0;
-        while (mini->cmds->args[args_count] != NULL)
-            args_count++;
+}
 
-        mini->cmds->args = realloc(mini->cmds->args, (args_count + 2) * sizeof(char *));
-        if (!mini->cmds->args)
-        {
-            exit(EXIT_FAILURE);
+// Function to count the total number of arguments in the command
+int count_total_arguments(t_mini *mini) {
+    int count = 0;
+    int index = 0;
+
+    while (mini->toks[index] != NULL) {
+        if (strcmp(mini->toks[index], "|") == 0 || is_redirection(mini->toks[index])) {
+            break;
+        } else {
+            count++;
         }
-        mini->cmds->args[args_count] = strdup(token);
-        mini->cmds->args[args_count + 1] = NULL;
+        index++;
     }
+
+    return count;
 }
 
-void handle_double_quote(char *token, t_mini *mini)
-{
-    if (!mini->cmds->args)
-    {
-        mini->cmds->args = malloc(2 * sizeof(char *));
-        mini->cmds->args[0] = strdup(token);
-        mini->cmds->args[1] = NULL;
-    }
-    else
-    {
-        int args_count = 0;
-        while (mini->cmds->args[args_count] != NULL)
-            args_count++;
+// Function to count the total number of redirections in the command
+int count_total_redirections(t_mini *mini) {
+    int count = 0;
+    int index = 0;
 
-        mini->cmds->args = realloc(mini->cmds->args, (args_count + 2) * sizeof(char *));
-        if (!mini->cmds->args)
-        {
-            exit(EXIT_FAILURE);
+    while (mini->toks[index] != NULL) {
+        if (is_redirection(mini->toks[index])) {
+            count++;
         }
-        mini->cmds->args[args_count] = strdup(token);
-        mini->cmds->args[args_count + 1] = NULL;
+        index++;
     }
-}*/
 
-void handle_redirection(char *token, t_mini *mini) {
-    if (strcmp(token, "<") == 0)
-        mini->fdin = open_file(token, O_RDONLY);
-    else if (strcmp(token, ">") == 0 || strcmp(token, ">>") == 0)
-        mini->fdout = open_file(token, O_WRONLY | O_CREAT | (strcmp(token, ">>") == 0 ? O_APPEND : O_TRUNC));
+    return count;
 }
 
-void handle_quote(char *token, t_mini *mini) {
-    char quote_type = token[0];
+// Function to initialize the cmds structure
+void initialize_cmds(t_cmds *cmds, int args_count, int redirect_count) {
+    cmds->cmd = NULL;
 
-    memmove(token, token + 1, strlen(token));
-    token[strlen(token) - 1] = '\0';
+    cmds->args = malloc((args_count + 1) * sizeof(char *));
+    cmds->args[args_count] = NULL;
 
-    if (!mini->cmds->args) {
-        mini->cmds->args = malloc(2 * sizeof(char *));
-        mini->cmds->args[0] = strdup(token);
-        mini->cmds->args[1] = NULL;
+    cmds->redirect = malloc(sizeof(t_redirect) * redirect_count);
+
+    cmds->fdi = 0;
+    cmds->fdo = 1;
+    cmds->next = NULL;
+}
+
+// Function to handle adding output and input redirection to the cmds structure
+void handle_redirection(t_mini *mini, t_cmds *cmds, int *index) {
+    if (strcmp(mini->toks[*index], "<") == 0) {
+        cmds->fdi = open_next_file(mini->toks[++(*index)]);
+    } else if (strcmp(mini->toks[*index], ">") == 0) {
+        cmds->fdo = open_next_file(mini->toks[++(*index)]);
+    } else if (strcmp(mini->toks[*index], ">>") == 0) {
+        cmds->fdo = open_next_file(mini->toks[++(*index)]);
+    }
+}
+
+// Function to handle adding the last command in the command sequence to the cmds structure
+void handle_last_command(t_mini *mini, t_cmds *cmds, int *index) {
+    if (cmds->cmd == NULL) {
+        cmds->cmd = strdup(mini->toks[*index]);
     } else {
         int args_count = 0;
-        while (mini->cmds->args[args_count] != NULL)
+        while (cmds->args[args_count] != NULL) {
             args_count++;
-
-        mini->cmds->args = realloc(mini->cmds->args, (args_count + 2) * sizeof(char *));
-        if (!mini->cmds->args) {
-            perror("Memory allocation failed");
-            exit(EXIT_FAILURE);
         }
-        mini->cmds->args[args_count] = strdup(token);
-        mini->cmds->args[args_count + 1] = NULL;
+
+        cmds->args = realloc(cmds->args, (args_count + 2) * sizeof(char *));
+        cmds->args[args_count] = strdup(mini->toks[*index]);
+        cmds->args[args_count + 1] = NULL;
     }
 
-    if (quote_type == '\'' && strchr(token, '>') != NULL) {
-        handle_redirection(token, mini);
-    }
+    (*index)++;
 }
 
-
-/*void handle_redirection(char *token, t_mini *mini)
-{
-    if (strcmp(token, "<") == 0)
-        mini->fdin = open_next_file(token);
-    else if (strcmp(token, ">") == 0)
-    {
-        mini->fdout = open_next_file(token); 
+// Function to create a new command in the linked list of commands
+t_cmds *create_new_command() {
+    t_cmds *new_cmd = malloc(sizeof(t_cmds));
+    if (!new_cmd) {
+        exit(EXIT_FAILURE);
     }
-    else if (strcmp(token, ">>") == 0)
-    {
-        mini->fdout = open_next_file(token);
-    }
-}*/
 
-/*void parse_input(t_mini *mini, char *input)
-{
-    char *token;
-    char *saveptr;
-    const char *delimiters = " \t\n";
+    new_cmd->redirect = NULL;
+    new_cmd->next = NULL;
 
-    token = strtok_r(input, delimiters, &saveptr);
-    while (token != NULL)
-    {
-        if (strchr(token, '\'') != NULL)
-        {
-            handle_single_quote(token, mini);
+    return new_cmd;
+}
+
+// Function to initialize the lex struct with appropriate values
+void initialize_lex(t_lex *lex) {
+    lex->token = 0;
+    lex->args = 0;
+    lex->redirect = 0;
+}
+
+// Main parser function
+int parse_input(t_mini *mini) {
+    t_cmds *current_cmd = NULL;
+    t_lex lex;
+    int index = 0;
+
+    initialize_lex(&lex);
+
+    while (mini->toks[index] != NULL) {
+        if (strcmp(mini->toks[index], "|") == 0) {
+            current_cmd = create_new_command();
+            initialize_cmds(current_cmd, lex.args, lex.redirect);
+
+            if (mini->cmds == NULL) {
+                mini->cmds = current_cmd;
+            } else {
+                t_cmds *temp = mini->cmds;
+                while (temp->next != NULL) {
+                    temp = temp->next;
+                }
+                temp->next = current_cmd;
+            }
+
+            initialize_lex(&lex);
+            index++;
+        } else if (is_redirection(mini->toks[index])) {
+            handle_redirection(mini, current_cmd, &index);
+            lex.redirect++;
+        } else {
+            handle_last_command(mini, current_cmd, &index);
+            lex.args++;
         }
-        else if (strchr(token, '\"') != NULL)
-        {
-            handle_double_quote(token, mini);
-        }
-        else
-        {
-            printf("Token: %s\n", token);
-        }
-        handle_redirection(token, mini);
-        token = strtok_r(NULL, delimiters, &saveptr);
-    }
-}*/
-
-void parse_input(t_mini *mini, char *input) {
-    char *token;
-    char *saveptr;
-    const char *delimiters = " \t\n";
-
-    token = strtok_r(input, delimiters, &saveptr);
-    while (token != NULL) {
-        if (strchr(token, '\'') || strchr(token, '\"'))
-            handle_quote(token, mini);
-        else
-            handle_redirection(token, mini);
-
-        token = strtok_r(NULL, delimiters, &saveptr);
     }
 
-    if (mini->cmds) {
-        execute_commands(mini);
-        free_cmd(mini->cmds);
-        mini->cmds = NULL;
+    // Add the last command if it exists
+    if (current_cmd != NULL && current_cmd->cmd != NULL) {
+        return 1;
     }
+
+    return -1; // Syntax error
 }
