@@ -1,5 +1,29 @@
 #include "../../includes/minishell.h"
 
+
+int open_next_file(const char *filename) {
+    int fd;
+
+    if (strcmp(filename, "<") == 0) {
+        fprintf(stderr, "Error: Missing input file after '<'\n");
+        exit(EXIT_FAILURE);
+    } else if (strcmp(filename, ">") == 0) {
+        fprintf(stderr, "Error: Missing output file after '>'\n");
+        exit(EXIT_FAILURE);
+    } else if (strcmp(filename, ">>") == 0) {
+        fprintf(stderr, "Error: Missing output file after '>>'\n");
+        exit(EXIT_FAILURE);
+    }
+
+    fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    if (fd == -1) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    return fd;
+}
+
 int is_redirection(const char *str) {
     return (strcmp(str, ">") == 0 || strcmp(str, "<") == 0);
 }

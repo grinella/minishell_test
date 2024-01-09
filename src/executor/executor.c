@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-/*void execute_commands(t_mini *mini) {
+void execute_commands(t_mini *mini) {
     t_cmds *cmd = mini->cmds;
     int saved_stdin = dup(STDIN_FILENO);
     int saved_stdout = dup(STDOUT_FILENO);
@@ -55,5 +55,5 @@
 
     close(saved_stdin);
     close(saved_stdout);
-}*/
+}
 
