@@ -1,4 +1,4 @@
-#include "includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int is_whitespace(char c) {
     return (c == ' ' || c == '\t' || c == '\n');
@@ -44,7 +44,7 @@ void tokenize_command(const char *command, t_lexer *lexer) {
 
         ++i;
     }
-    if (token_start < strlen(command)) {
+    if (token_start < (int)ft_strlen(command)) {
         token = strndup(command + token_start, strlen(command) - token_start);
         int count = lexer->toks_count;
         lexer->toks = realloc(lexer->toks, (count + 2) * sizeof(char *));

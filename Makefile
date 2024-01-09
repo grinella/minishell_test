@@ -28,6 +28,7 @@ SIGNAL_DIR 		=	src/signals
 
 SRCS = 		minishell.c \
 			src/parser/parser.c \
+			src/parser/lexer.c \
 			src/executor/executor.c \
        		#$(wildcard $(SRC_DIR)/$(PARSING_DIR)/*.c) \
        		$(wildcard $(SRC_DIR)/$(EXECUTOR_DIR)/*.c) \

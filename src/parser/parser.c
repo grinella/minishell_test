@@ -100,8 +100,8 @@ t_cmds *create_new_command() {
 }
 
 // Function to initialize the lex struct with appropriate values
-void initialize_lex(t_lex *lex) {
-    lex->token = 0;
+void initialize_lex(t_lexer *lex) {
+    lex->toks_count = 0;
     lex->args = 0;
     lex->redirect = 0;
 }
@@ -109,7 +109,7 @@ void initialize_lex(t_lex *lex) {
 // Main parser function
 int parse_input(t_mini *mini) {
     t_cmds *current_cmd = NULL;
-    t_lex lex;
+    t_lexer lex;
     int index = 0;
 
     initialize_lex(&lex);

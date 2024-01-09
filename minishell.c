@@ -70,10 +70,10 @@ int main(int argc, char **argv, char **envp) {
 
         add_history(input);
         mini->toks = NULL;
-        t_lex lex;
-        initialize_lex(&lex);
+        t_lexer lexer;
+        initialize_lex(&lexer);
 
-        run_lexer(input, &lex);
+        run_lexer(input, &lexer);
         if (parse_input(mini) != -1) {
             execute_commands(mini);
         }

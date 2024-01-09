@@ -56,6 +56,8 @@ typedef struct s_mini
 typedef struct s_lexer {
     char **toks; // Token array
     int toks_count; // Number of tokens
+    int args;
+    int redirect;
 } t_lexer;
 
 //SEGNALI
@@ -63,10 +65,12 @@ int open_next_file(const char *filename);
 void handle_signal(int signal);
 
 //PARSER
-void parse_input(t_mini *mini, char *input);
+int parse_input(t_mini *mini);
 
 //EXECUTOR
 void execute_commands(t_mini *mini);
 void free_cmd(t_cmds *cmd);
+void initialize_lex(t_lexer *lex);
+int run_lexer(const char *command, t_lexer *lexer);
 
 #endif
